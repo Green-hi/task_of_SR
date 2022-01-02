@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="date" class="java.util.Date"/>
+    <bean id="clazz" class="com.qfedu.ioc.bean.Clazz">
+        <property name="classId" value="2010"/>
+        <property name="className" value="Java2010"/>
+    </bean>
+    <bean id="book" class="com.qfedu.ioc.bean.Book" scope="prototype" init-method="init" destroy-method="destroy"/>
+
+    <!--IoC 控制反转 通过bean标签将实体类配置给spring进行(通过反射)创建和管理-->
+    <!--DI 依赖注入 (通过反射)给对象属性赋值-->
+    <!--DI三种方式：set方法注入、构造器注入、接口注入-->
+    <!--set方法注入-->  <!--默认scope="singleton"单例模式{默认饿汉模式 lazy-init="true"(懒汉模式)}-->
+    <bean id="student" class="com.qfedu.ioc.bean.Student" autowire="byType" scope="prototype">
+        <property name="stuNum" value="10002"/>
+        <property name="stuName" value="李四"/>
+        <property name="stuAge" value="18"/>
+        <property name="stuGender" value="女"/>
+        <property name="entranceTime" ref="date"/>
+        <!--<property name="entranceTime">
+            <bean class="java.util.Date"/>
+        </property>-->
+        <property name="clazz" ref="clazz"/>
+        <property name="hobbies">
+            <list>
+                <bean class="com.qfedu.ioc.bean.Book"/>
+                <bean class="com.qfedu.ioc.bean.Book"/>
+                <ref bean="book"/>
+            </list>
+        </property>
+        <property name="sets">
+            <set>
+                <value>和list注入方式相同</value>
+                <value>直接用property标签value属性或用set标签</value>
+            </set>
+        </property>
+        <property name="maps">
+            <map>
+                <entry>
+                    <key>
+                        <value>k1</value>
+                    </key>
+                    <value>v1</value>
+                </entry>
+                <entry>
+                    <key>
+                        <value>k2</value>
+                    </key>
+                    <bean class="com.qfedu.ioc.bean.Book"/>
+                </entry>
+            </map>
+        </property>
+        <property name="properties">
+            <props>  <!--专用于properties-->
+                <prop key="k1">v1</prop>
+                <prop key="k2">v2</prop>
+            </props>
+        </property>
+    </bean>
+    <!--构造器注入-->
+    <!--<bean id="student" class="com.qfedu.ioc.bean.Student">
+        <constructor-arg value="10003"></constructor-arg>
+    </bean>-->
+
+    <bean id="productService1" class="com.qfedu.ioc.service.impl.ProductServiceImpl"/>
+    <bean id="productService" class="com.qfedu.ioc.service.impl.ProductServiceImpl2"/>
+
+    <bean id="testServlet" class="com.qfedu.ioc.servlets.TestServlet" autowire="byName"/>
+
+</beans>
